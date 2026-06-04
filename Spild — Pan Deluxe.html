@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)file:///Users/macbook/Downloads/spild-v2.html -->
+<html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Spild — Pan Deluxe</title>
+<link href="./Spild — Pan Deluxe_files/css2" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --text: #1a1916;
+    --muted: #888680;
+    --accent: #c8a96e;
+    --accent-dark: #a08040;
+    --green: #3d7a5a;
+    --red: #c0392b;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-size: 15px; font-weight: 600; }
+  .logo span { color: var(--accent-dark); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .date-display { font-size: 12px; color: var(--muted); }
+  .btn-admin { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--muted); }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* SHEET */
+  .sheet { padding: 12px 12px 90px; }
+  .category { margin-bottom: 16px; background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .cat-header { padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+  .cat-hojaldres .cat-header { background: #ede0ee; color: #6b3d8a; }
+  .cat-tartas .cat-header { background: #fde8cc; color: #a05010; }
+  .cat-panes .cat-header { background: #d8edda; color: #2a5a3a; }
+  .cat-bollos .cat-header { background: #cce0f0; color: #1a4a70; }
+
+  .product-row { display: flex; align-items: center; padding: 0 14px; border-bottom: 1px solid var(--border); min-height: 50px; gap: 8px; }
+  .product-row:last-child { border-bottom: none; }
+  .product-row.empty-row .product-name { color: var(--muted); font-style: italic; }
+  .product-name { flex: 1; font-size: 14px; }
+  .qty-control { display: flex; align-items: center; }
+  .qty-btn {
+    width: 38px; height: 38px;
+    border: 1px solid var(--border); background: var(--bg);
+    font-size: 20px; font-weight: 400; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text); user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qty-btn:first-child { border-radius: 8px 0 0 8px; }
+  .qty-btn:last-child { border-radius: 0 8px 8px 0; }
+  .qty-btn:active { background: var(--accent-dark); color: white; border-color: var(--accent-dark); }
+  .qty-display {
+    width: 46px; height: 38px;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    border-left: none; border-right: none;
+    text-align: center; font-size: 15px; font-weight: 600;
+    background: white; color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    -moz-appearance: textfield;
+  }
+  .qty-display::-webkit-outer-spin-button,
+  .qty-display::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .qty-display.has-value { color: var(--accent-dark); background: #fffbf4; }
+
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 10px 12px; display: flex; gap: 8px; z-index: 100;
+  }
+  .btn-save {
+    flex: 1; padding: 14px; background: var(--text); color: white;
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+  }
+  .btn-save:active { opacity: 0.8; }
+  .btn-secondary {
+    padding: 14px 16px; background: none; color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer;
+  }
+
+  /* HISTORY */
+  .page-header { padding: 14px 12px 8px; display: flex; align-items: center; gap: 10px; }
+  .btn-back { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; color: var(--text); }
+  .page-title { font-size: 16px; font-weight: 600; }
+  .action-bar { padding: 0 12px 12px; display: flex; gap: 8px; }
+  .btn-green { flex: 1; padding: 11px; background: var(--green); color: white; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+  .btn-danger { padding: 11px 14px; background: none; color: var(--red); border: 1px solid var(--red); border-radius: 10px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+  .history-entry { margin: 0 12px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .history-entry-header { padding: 10px 14px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .history-entry-date { font-size: 13px; font-weight: 600; }
+  .history-entry-total { font-size: 12px; color: var(--muted); }
+  .history-cat-label { padding: 6px 14px 2px; font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .history-item { display: flex; justify-content: space-between; padding: 3px 14px; font-size: 13px; }
+  .history-item .qty { font-weight: 600; color: var(--accent-dark); }
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px; }
+
+  /* ADMIN */
+  .admin-section { margin: 0 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .admin-cat-header { padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .admin-row { display: flex; align-items: center; padding: 6px 14px; border-top: 1px solid var(--border); gap: 8px; }
+  .admin-input {
+    flex: 1; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text);
+  }
+  .admin-input:focus { outline: none; border-color: var(--accent); background: white; }
+  .btn-del { background: none; border: none; color: var(--red); font-size: 18px; cursor: pointer; padding: 4px 8px; line-height: 1; }
+  .btn-add-row { width: 100%; padding: 10px; background: none; border: none; border-top: 1px solid var(--border); font-size: 13px; color: var(--accent-dark); font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500; }
+  .btn-add-row:active { background: var(--bg); }
+  .admin-save-bar { padding: 10px 12px 20px; }
+  .btn-save-admin { width: 100%; padding: 14px; background: var(--text); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+
+  /* PIN MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 300; align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal { background: var(--surface); border-radius: 16px; padding: 24px; width: 280px; text-align: center; }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .pin-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+  .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); transition: background 0.15s; }
+  .pin-dot.filled { background: var(--text); border-color: var(--text); }
+  .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pin-key {
+    padding: 14px; border: 1px solid var(--border); border-radius: 10px;
+    font-size: 18px; font-weight: 500; background: var(--bg); cursor: pointer;
+    font-family: 'DM Sans', sans-serif; color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pin-key:active { background: var(--text); color: white; }
+  .pin-cancel { margin-top: 10px; width: 100%; padding: 10px; background: none; border: none; font-size: 14px; color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer; }
+  .pin-error { color: var(--red); font-size: 12px; margin-top: -12px; margin-bottom: 8px; min-height: 16px; }
+
+  /* TOAST */
+  .toast { position: fixed; top: 68px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 9px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.3s; z-index: 200; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Pan <span>Deluxe</span></div>
+  <div class="header-right">
+    <div class="date-display" id="header-date">onsdag 3. juni</div>
+    <button class="btn-admin" onclick="openPin()">⚙ Admin</button>
+  </div>
+</header>
+
+<div id="toast" class="toast"></div>
+
+<!-- PIN MODAL -->
+<div id="pin-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">Admin adgang</div>
+    <div class="modal-sub">Indtast PIN</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+    <div class="pin-pad">
+      <button class="pin-key" onclick="pinKey(&#39;1&#39;)">1</button>
+      <button class="pin-key" onclick="pinKey(&#39;2&#39;)">2</button>
+      <button class="pin-key" onclick="pinKey(&#39;3&#39;)">3</button>
+      <button class="pin-key" onclick="pinKey(&#39;4&#39;)">4</button>
+      <button class="pin-key" onclick="pinKey(&#39;5&#39;)">5</button>
+      <button class="pin-key" onclick="pinKey(&#39;6&#39;)">6</button>
+      <button class="pin-key" onclick="pinKey(&#39;7&#39;)">7</button>
+      <button class="pin-key" onclick="pinKey(&#39;8&#39;)">8</button>
+      <button class="pin-key" onclick="pinKey(&#39;9&#39;)">9</button>
+      <button class="pin-key" onclick="pinKey(&#39;del&#39;)" style="font-size:14px;">⌫</button>
+      <button class="pin-key" onclick="pinKey(&#39;0&#39;)">0</button>
+      <button class="pin-key" onclick="pinKey(&#39;del&#39;)" style="font-size:14px; visibility:hidden;"></button>
+    </div>
+    <button class="pin-cancel" onclick="closePin()">Annuller</button>
+  </div>
+</div>
+
+<!-- SHEET VIEW -->
+<div id="view-sheet" class="view active">
+  <div class="sheet" id="sheet-content"><div class="category cat-hojaldres"><div class="cat-header">Hojaldres</div><div class="product-row"><div class="product-name">Croissant</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_0"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Crois. Chocolate</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_1"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Crois. Mousse</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_2"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Croissant Canela</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_3"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Pistacio</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_4"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Crema</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_5"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Rosa Fruta</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_6"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Croissant Manzana</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_7"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Pera</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_8"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Avellana Choco</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_9"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Double Baked</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_10"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">C. Chocolate Vainilla</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_11"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Rollo Cardam.</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_12"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Rollo Canela</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_13"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Crois. Amapola</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_14"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Brownie</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_15"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">C. Grosella</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_16"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Pan Suisse / B.Caramelo</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_17"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Mini Pistacio</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_18"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Mini Crema</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_HOJALDRES_19"><button class="qty-btn">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_20" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_21" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_22" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_23" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_24" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_25" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_26" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_27" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_28" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_HOJALDRES_29" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div></div><div class="category cat-tartas"><div class="cat-header">Tartas</div><div class="product-row"><div class="product-name">Merengue</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_0"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Choco Dome</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_1"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Coco Volcan</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_2"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Macaron Grande</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_3"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Tartaleta Frambuesa</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_4"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Lychee</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_5"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Tarta Queso</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_6"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Choco Banana</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_7"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Choco Frambuesa</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_8"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Brownie</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_9"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Cookie Choco</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_10"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Cookie Biscoff</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_11"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Cookie Framb.</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_12"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Fastelavn</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_13"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Mango Brasil</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_14"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">G. Limon</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_TARTAS_15"><button class="qty-btn">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_16" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_17" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_18" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_19" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_20" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_21" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_22" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_23" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_24" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_TARTAS_25" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div></div><div class="category cat-panes"><div class="cat-header">Panes</div><div class="product-row"><div class="product-name">Kamut</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_0"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Blanco</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_1"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Brotado</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_2"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Nueces Arandanos</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_3"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Sesamo</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_4"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Sesamo Tostado</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_5"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Espelta</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_6"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Espelta Semillas</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_7"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Proteina</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_8"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Integral</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_9"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Integral Semillas</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_10"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Centeno</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_11"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Brioche</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_12"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Amapola</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_13"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Focaccia</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_14"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Baguette</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_15"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Trigo/Centeno</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_16"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Sarraceno</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_PANES_17"><button class="qty-btn">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_18" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_19" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_20" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_21" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_22" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_23" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_24" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_25" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_26" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_PANES_27" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div></div><div class="category cat-bollos"><div class="cat-header">Bollos</div><div class="product-row"><div class="product-name">Chapata</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_0"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Kamut</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_1"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Semillas</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_2"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Nueces Aran.</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_3"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Sesamo</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_4"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Espelta</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_5"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Amapola</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_6"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Integral</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_7"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Pitufo</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_8"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Pitufo Integral</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_9"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Brioche</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_10"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Choco Brioche</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_11"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Burguer Brioche</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_12"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">C. Mixto</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_13"><button class="qty-btn">+</button></div></div><div class="product-row"><div class="product-name">Barra</div><div class="qty-control"><button class="qty-btn">−</button><input type="number" class="qty-display" min="0" id="qty_BOLLOS_14"><button class="qty-btn">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_15" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_16" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_17" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_18" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_19" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_20" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_21" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_22" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_23" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div><div class="product-row empty-row"><div class="product-name">—</div><div class="qty-control"><button class="qty-btn" style="opacity: 0.2;">−</button><input type="number" class="qty-display" min="0" readonly="" id="qty_BOLLOS_24" style="opacity: 0.2;"><button class="qty-btn" style="opacity: 0.2;">+</button></div></div></div></div>
+  <div class="bottom-bar">
+    <button class="btn-secondary" onclick="showHistory()">Historik</button>
+    <button class="btn-save" onclick="saveEntry()">Gem dagens spild</button>
+  </div>
+</div>
+
+<!-- HISTORY VIEW -->
+<div id="view-history" class="view">
+  <div class="page-header">
+    <button class="btn-back" onclick="showSheet()">← Tilbage</button>
+    <div class="page-title">Historik</div>
+  </div>
+  <div class="action-bar">
+    <button class="btn-green" onclick="exportCSV()">⬇ Eksporter CSV</button>
+    <button class="btn-danger" onclick="clearAll()">Ryd alt</button>
+  </div>
+  <div id="history-list"></div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div id="view-admin" class="view">
+  <div class="page-header">
+    <button class="btn-back" onclick="showSheet()">← Tilbage</button>
+    <div class="page-title">Rediger produkter</div>
+  </div>
+  <div id="admin-content"></div>
+  <div class="admin-save-bar">
+    <button class="btn-save-admin" onclick="saveAdmin()">Gem ændringer</button>
+  </div>
+</div>
+
+<script>
+const DEFAULT_PRODUCTS = {
+  HOJALDRES: [
+    "Croissant","Crois. Chocolate","Crois. Mousse","Croissant Canela",
+    "Pistacio","Crema","Rosa Fruta","Manzana","Pera","Avellana Choco",
+    "Double Baked","C. Chocolate Vainilla","Rollo Cardam.","Rollo Canela",
+    "Crois. Amapola","Brownie","C. Grosella","Pan Suisse / B.Caramelo",
+    "Mini Pistacio","Mini Crema",
+    "","","","","","","","","",""
+  ],
+  TARTAS: [
+    "Merengue","Choco Dome","Coco Volcan","Macaron Grande",
+    "Tartaleta Frambuesa","Lychee","Tarta Queso","Choco Banana",
+    "Choco Frambuesa","Brownie","Cookie Choco","Cookie Biscoff",
+    "Cookie Framb.","Fastelavn","Mango Brasil","G. Limon",
+    "","","","","","","","","",""
+  ],
+  PANES: [
+    "Kamut","Blanco","Brotado","Nueces Arandanos","Sesamo",
+    "Sesamo Tostado","Espelta","Espelta Semillas","Proteina","Integral",
+    "Integral Semillas","Centeno","Brioche","Amapola","Focaccia",
+    "Baguette","Trigo/Centeno","Sarraceno",
+    "","","","","","","","","",""
+  ],
+  BOLLOS: [
+    "Chapata","Kamut","Semillas","Nueces Aran.","Sesamo","Espelta",
+    "Amapola","Integral","Pitufo","Pitufo Integral","Brioche",
+    "Choco Brioche","Burguer Brioche","C. Mixto","Barra",
+    "","","","","","","","","",""
+  ]
+};
+
+const CAT_LABELS = { HOJALDRES:"Hojaldres", TARTAS:"Tartas", PANES:"Panes", BOLLOS:"Bollos" };
+const PIN = "1234"; // ← Skift dette til din foretrukne PIN
+
+let products = {};
+let quantities = {};
+let history = [];
+let pinBuffer = "";
+
+function today() {
+  return new Date().toLocaleDateString('da-DK', { weekday:'long', day:'numeric', month:'long' });
+}
+function todayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function init() {
+  document.getElementById('header-date').textContent = today();
+  loadData();
+  buildSheet();
+}
+
+function loadData() {
+  try { products = JSON.parse(localStorage.getItem('spild-products') || 'null') || deepCopy(DEFAULT_PRODUCTS); } catch { products = deepCopy(DEFAULT_PRODUCTS); }
+  try { history = JSON.parse(localStorage.getItem('spild-history') || '[]'); } catch { history = []; }
+}
+
+function deepCopy(o) { return JSON.parse(JSON.stringify(o)); }
+
+function saveProducts() { localStorage.setItem('spild-products', JSON.stringify(products)); }
+function saveHistory() { localStorage.setItem('spild-history', JSON.stringify(history)); }
+
+function buildSheet() {
+  const container = document.getElementById('sheet-content');
+  container.innerHTML = '';
+  quantities = {};
+
+  for (const [cat, prods] of Object.entries(products)) {
+    const section = document.createElement('div');
+    section.className = `category cat-${cat.toLowerCase()}`;
+    const header = document.createElement('div');
+    header.className = 'cat-header';
+    header.textContent = CAT_LABELS[cat];
+    section.appendChild(header);
+
+    prods.forEach((name, idx) => {
+      const key = cat + '|' + idx;
+      quantities[key] = 0;
+      const isEmpty = !name.trim();
+
+      const row = document.createElement('div');
+      row.className = 'product-row' + (isEmpty ? ' empty-row' : '');
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'product-name';
+      nameEl.textContent = isEmpty ? '—' : name;
+
+      const ctrl = document.createElement('div');
+      ctrl.className = 'qty-control';
+
+      const minus = document.createElement('button');
+      minus.className = 'qty-btn';
+      minus.textContent = '−';
+      minus.addEventListener('click', () => { if (!isEmpty) changeQty(key, -1); });
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'qty-display';
+      input.value = '0';
+      input.min = '0';
+      input.readOnly = isEmpty;
+      input.id = 'qty_' + cat + '_' + idx;
+      input.addEventListener('input', e => {
+        if (isEmpty) return;
+        quantities[key] = Math.max(0, parseInt(e.target.value) || 0);
+        e.target.classList.toggle('has-value', quantities[key] > 0);
+      });
+
+      const plus = document.createElement('button');
+      plus.className = 'qty-btn';
+      plus.textContent = '+';
+      plus.addEventListener('click', () => { if (!isEmpty) changeQty(key, 1); });
+
+      if (isEmpty) {
+        minus.style.opacity = '0.2';
+        plus.style.opacity = '0.2';
+        input.style.opacity = '0.2';
+      }
+
+      ctrl.appendChild(minus); ctrl.appendChild(input); ctrl.appendChild(plus);
+      row.appendChild(nameEl); row.appendChild(ctrl);
+      section.appendChild(row);
+    });
+    container.appendChild(section);
+  }
+}
+
+function changeQty(key, delta) {
+  quantities[key] = Math.max(0, (quantities[key] || 0) + delta);
+  const [cat, idx] = key.split('|');
+  const el = document.getElementById('qty_' + cat + '_' + idx);
+  if (el) { el.value = quantities[key]; el.classList.toggle('has-value', quantities[key] > 0); }
+}
+
+function saveEntry() {
+  const items = [];
+  for (const [key, qty] of Object.entries(quantities)) {
+    if (qty > 0) {
+      const [cat, idx] = key.split('|');
+      const name = products[cat][parseInt(idx)];
+      if (name && name.trim()) items.push({ cat, name, qty });
+    }
+  }
+  if (!items.length) { showToast("Ingen spild registreret"); return; }
+  const total = items.reduce((s, i) => s + i.qty, 0);
+  const dateKey = todayKey();
+  const existing = history.findIndex(e => e.date === dateKey);
+  const entry = { date: dateKey, dateLabel: today(), items, total };
+  if (existing >= 0) history[existing] = entry; else history.unshift(entry);
+  saveHistory();
+  for (const key of Object.keys(quantities)) {
+    quantities[key] = 0;
+    const [cat, idx] = key.split('|');
+    const el = document.getElementById('qty_' + cat + '_' + idx);
+    if (el) { el.value = '0'; el.classList.remove('has-value'); }
+  }
+  showToast(`✓ Gemt — ${total} stk. spild`);
+}
+
+// HISTORY
+function showHistory() {
+  renderHistory();
+  switchView('history');
+}
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (!history.length) { el.innerHTML = '<div class="empty-state">Ingen data endnu</div>'; return; }
+  el.innerHTML = history.map(entry => {
+    const bycat = {};
+    for (const item of entry.items) { if (!bycat[item.cat]) bycat[item.cat] = []; bycat[item.cat].push(item); }
+    const rows = Object.entries(bycat).map(([cat, items]) =>
+      `<div class="history-cat-label">${CAT_LABELS[cat]||cat}</div>` +
+      items.map(i => `<div class="history-item"><span>${i.name}</span><span class="qty">${i.qty}</span></div>`).join('')
+    ).join('');
+    return `<div class="history-entry">
+      <div class="history-entry-header"><div class="history-entry-date">${entry.dateLabel}</div><div class="history-entry-total">${entry.total} stk.</div></div>
+      ${rows}
+    </div>`;
+  }).join('');
+}
+function exportCSV() {
+  if (!history.length) { showToast("Ingen data"); return; }
+  const rows = [['Dato','Kategori','Produkt','Antal']];
+  for (const e of history) for (const i of e.items) rows.push([e.date, i.cat, i.name, i.qty]);
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'spild-pandeluxe.csv'; a.click();
+  URL.revokeObjectURL(url);
+  showToast("CSV downloadet");
+}
+function clearAll() {
+  if (!confirm("Slet al historik?")) return;
+  history = []; saveHistory(); renderHistory(); showToast("Historik slettet");
+}
+
+// ADMIN
+function buildAdmin() {
+  const container = document.getElementById('admin-content');
+  container.innerHTML = '';
+  for (const [cat, prods] of Object.entries(products)) {
+    const section = document.createElement('div');
+    section.className = 'admin-section';
+    const header = document.createElement('div');
+    header.className = `admin-cat-header cat-${cat.toLowerCase()}`;
+    header.style.cssText = `font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:9px 14px;`;
+    if (cat==='HOJALDRES') header.style.background='#ede0ee', header.style.color='#6b3d8a';
+    if (cat==='TARTAS') header.style.background='#fde8cc', header.style.color='#a05010';
+    if (cat==='PANES') header.style.background='#d8edda', header.style.color='#2a5a3a';
+    if (cat==='BOLLOS') header.style.background='#cce0f0', header.style.color='#1a4a70';
+    header.textContent = CAT_LABELS[cat];
+    section.appendChild(header);
+
+    prods.forEach((name, idx) => {
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+      const input = document.createElement('input');
+      input.className = 'admin-input';
+      input.type = 'text';
+      input.value = name;
+      input.placeholder = 'Tomt felt';
+      input.dataset.cat = cat;
+      input.dataset.idx = idx;
+      const del = document.createElement('button');
+      del.className = 'btn-del';
+      del.textContent = '×';
+      del.title = 'Ryd felt';
+      del.onclick = () => { input.value = ''; };
+      row.appendChild(input); row.appendChild(del);
+      section.appendChild(row);
+    });
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add-row';
+    addBtn.textContent = '+ Tilføj række';
+    addBtn.dataset.cat = cat;
+    addBtn.onclick = (e) => {
+      const c = e.target.dataset.cat;
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+      const input = document.createElement('input');
+      input.className = 'admin-input';
+      input.type = 'text';
+      input.placeholder = 'Nyt produkt';
+      input.dataset.cat = c;
+      input.dataset.idx = products[c].length;
+      const del = document.createElement('button');
+      del.className = 'btn-del'; del.textContent = '×';
+      del.onclick = () => { input.value = ''; };
+      row.appendChild(input); row.appendChild(del);
+      section.insertBefore(row, addBtn);
+      products[c].push('');
+      input.focus();
+    };
+    section.appendChild(addBtn);
+    container.appendChild(section);
+  }
+}
+
+function saveAdmin() {
+  const inputs = document.querySelectorAll('.admin-input');
+  inputs.forEach(input => {
+    const cat = input.dataset.cat;
+    const idx = parseInt(input.dataset.idx);
+    if (products[cat] && idx < products[cat].length) products[cat][idx] = input.value.trim();
+  });
+  saveProducts();
+  buildSheet();
+  switchView('sheet');
+  showToast("Produkter gemt");
+}
+
+// PIN
+function openPin() { pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = ''; document.getElementById('pin-modal').classList.add('show'); }
+function closePin() { document.getElementById('pin-modal').classList.remove('show'); pinBuffer = ''; }
+function pinKey(k) {
+  if (k === 'del') { pinBuffer = pinBuffer.slice(0, -1); updatePinDots(); return; }
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += k;
+  updatePinDots();
+  if (pinBuffer.length === 4) {
+    setTimeout(() => {
+      if (pinBuffer === PIN) {
+        closePin();
+        buildAdmin();
+        switchView('admin');
+      } else {
+        document.getElementById('pin-error').textContent = 'Forkert PIN';
+        pinBuffer = '';
+        updatePinDots();
+      }
+    }, 150);
+  }
+}
+function updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('d' + i).classList.toggle('filled', i < pinBuffer.length);
+  }
+}
+
+// NAVIGATION
+function showSheet() { switchView('sheet'); }
+function switchView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+init();
+</script>
+
+
+</body></html>
